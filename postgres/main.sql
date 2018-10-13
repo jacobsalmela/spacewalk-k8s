@@ -1,3 +1,4 @@
+-- main.sql from a clean 2.8 install
 -- Spacewalk needs this additional language installed
 CREATE LANGUAGE pltclu;
 CREATE USER spaceuser SUPERUSER;
