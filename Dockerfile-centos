@@ -3,15 +3,16 @@ FROM centos:7
 MAINTAINER Jacob Salmela <jacob.salmela@pi-hole.net>
 
 RUN yum install -y https://copr-be.cloud.fedoraproject.org/results/@spacewalkproject/spacewalk-2.8/epel-7-x86_64/00736372-spacewalk-repo/spacewalk-repo-2.8-11.el7.centos.noarch.rpm \
-        https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
-        yum-utils && \
+        https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
         yum clean all
 
 RUN yum -y install \
         spacewalk-postgresql \
         supervisor  \
+        osad \
         yum clean all
 
+#RUN git clone https://github.com/liedekef/spacewalk_scripts.git /spacewalk-scripts
 # Copy the spacewalk install answer file for an unattended install
 COPY answerfile.txt /tmp/answerfile.txt
 
