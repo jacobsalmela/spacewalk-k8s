@@ -58,6 +58,18 @@ At this point, you should be able to reach the Web interface.
 
 or [https://127.0.0.1:8443/rhn/Login.do](https://127.0.0.1:8443/rhn/Login.do) if you already created your first user account and have an existing database.
 
+
+# Register a client
+Using a container here again but the steps are the same for a traditional server (per https://github.com/spacewalkproject/spacewalk/wiki/RegisteringClients#red-hat-enterprise-linux-5-6-and-7-scientific-linux-6-and-7-centos-5-6-and-7)
+
+```
+rpm -Uvh https://copr-be.cloud.fedoraproject.org/results/@spacewalkproject/spacewalk-2.8-client/epel-7-x86_64/00742644-spacewalk-repo/spacewalk-client-repo-2.8-11.el7.centos.noarch.rpm
+rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum -y install rhn-client-tools rhn-check rhn-setup rhnsd m2crypto yum-rhn-plugin
+rpm -Uvh http://<SPACEWALK CONTAINER FROM POD>/pub/rhn-org-trusted-ssl-cert-1.0-1.noarch.rpm
+rhnreg_ks --serverUrl=https://<SPACEWALK CONTAINER FROM POD>/XMLRPC --sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT --activationkey=1-centos7
+```
+
 # Next steps
 
 - certs
