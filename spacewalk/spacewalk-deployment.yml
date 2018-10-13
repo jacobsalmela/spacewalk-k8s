@@ -39,7 +39,7 @@ spec:
         ports:
         - containerPort: 8080
       - name: spacewalk
-        image: spacewalk:0.3
+        image: spacewalk:0.4
         imagePullPolicy: Never
         resources:
           limits:
