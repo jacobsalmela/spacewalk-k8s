@@ -6,12 +6,4 @@ metadata:
 provisioner: kubernetes.io/no-provisioner
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
----
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: spacewalk-repo-claim
-#provisioner: kubernetes.io/gce-pd
-provisioner: kubernetes.io/no-provisioner
-reclaimPolicy: Retain
-volumeBindingMode: Immediate
+#allowVolumeExpansion: true
