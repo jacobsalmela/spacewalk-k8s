@@ -1,0 +1,38 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: spacewalk
+spec:
+  selector:
+    app: spacewalk
+  ports:
+  - name: adminer
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  - name: spacewalk-sql
+    protocol: TCP
+    port: 5432
+    targetPort: 5432
+  - name: spacewalk-http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: spacewalk-https
+    protocol: TCP
+    port: 443
+    targetPort: 443
+  - name: spacewalk-jabber
+    protocol: TCP
+    port: 5222
+    targetPort: 5222
+  - name: spacewalk-dhcp
+    protocol: TCP
+    port: 68
+    targetPort: 68
+  - name: spacewalk-tftp
+    protocol: TCP
+    port: 69
+    targetPort: 69
+  type: NodePort
