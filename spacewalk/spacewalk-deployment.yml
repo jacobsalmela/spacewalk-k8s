@@ -17,10 +17,6 @@ spec:
     spec:
       securityContext:
         runAsUser: 0
-      # volumes:
-      #   - name: spacewalk-sql
-      #     configMap:
-      #       name: spacewalk-sql
       containers:
       - name: postgres
         image: spacewalk-postgres:0.2
@@ -33,7 +29,7 @@ spec:
         ports:
         - containerPort: 8080
       - name: spacewalk
-        image: spacewalk:0.1
+        image: spacewalk:0.3
         imagePullPolicy: Never
         resources:
           limits:
