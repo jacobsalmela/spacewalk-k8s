@@ -20,10 +20,6 @@ EXPOSE 80 443 5222 68 69
 
 USER root
 
-#RUN spacewalk-setup --skip-fqdn-test --external-postgresql --skip-db-population --skip-services-restart --answer-file=/tmp/answerfile.txt
-
 ADD supervisord.conf /etc/supervisord.d/supervisord.conf
 
-ENTRYPOINT supervisord -c /etc/supervisord.d/supervisord.conf # && \
-            # supervisorctl restart httpd && \
-            # supervisorctl restart tomcat
+ENTRYPOINT supervisord -c /etc/supervisord.d/supervisord.conf
