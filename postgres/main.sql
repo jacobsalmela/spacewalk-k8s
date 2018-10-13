@@ -1,3 +1,4 @@
+-- Spacewalk needs this additional language installed
 CREATE LANGUAGE pltclu;
 CREATE USER spaceuser SUPERUSER;
 
