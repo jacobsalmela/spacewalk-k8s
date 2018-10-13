@@ -17,12 +17,22 @@ spec:
     spec:
       securityContext:
         runAsUser: 0
+      volumes:
+      - name: spacewalk-postgres-claim
+        persistentVolumeClaim:
+          claimName: spacewalk-postgres-claim
+      - name: spacewalk-repo-claim
+        persistentVolumeClaim:
+          claimName: spacewalk-repo-claim
       containers:
       - name: postgres
         image: spacewalk-postgres:0.2
         imagePullPolicy: Never
         ports:
         - containerPort: 5432
+        volumeMounts:
+        - name: spacewalk-postgres-claim
+          mountPath: /var/lib/postgresql/data
       - name: adminer
         image: adminer
         imagePullPolicy: Always
@@ -44,3 +54,6 @@ spec:
         - containerPort: 5222
         - containerPort: 68
         - containerPort: 69
+        volumeMounts:
+        - name: spacewalk-repo-claim
+          mountPath: /var/www/html/repo
