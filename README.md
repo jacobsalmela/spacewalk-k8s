@@ -30,7 +30,7 @@ The Dockerfile does most everything, but the last program `supervisord` runs is 
 ```
 git clone <this repo>
 cd <this repo>
-docker build -t spacewalk:0.3 -f Dockerfile-centos .
+docker build -t spacewalk:0.4 -f Dockerfile-centos .
 cd postgres/
 docker build -t spacewalk-postgres:0.2 .
 cd ..
@@ -69,6 +69,21 @@ yum -y install rhn-client-tools rhn-check rhn-setup rhnsd m2crypto yum-rhn-plugi
 rpm -Uvh http://<SPACEWALK CONTAINER FROM POD>/pub/rhn-org-trusted-ssl-cert-1.0-1.noarch.rpm
 rhnreg_ks --serverUrl=https://<SPACEWALK CONTAINER FROM POD>/XMLRPC --sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT --activationkey=1-centos7
 ```
+
+# Re-deploying with changes
+
+You can rebuild images if you make changes.  Thanks to the persistent storage, the database and things should stay in tact.  
+
+```
+kubectl delete -f spacewalk/
+kubectl create -f spacewalk/
+```
+
+Just don't delete the `spacewalk-pv/` folder or you'll lose your persistent storage.
+
+# Exploring the database
+
+I have included the `adminer` container, which is a nice little GUI for databases.  Load it up at http://localhost:8080
 
 # Next steps
 
