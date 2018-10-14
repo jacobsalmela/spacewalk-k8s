@@ -9,9 +9,8 @@
 export LC_ALL=C
 export LANG=C
 
-CHANNELS=(centos-7-base
-centos-7-extras
-centos-7-updates)
+CHANNELS=(centos-7-epel)
+EPEL_VERSION=7
 
 # create and/or cleanup the errata dir
 ERRATADIR=/tmp/epel-errata
@@ -30,9 +29,18 @@ rm -f $ERRATADIR/* >/dev/null 2>&1
    bunzip2 updateinfo.xml.bz2
 )
 
-# upload the errata to spacewalk, e.g. for a channel used by redhat servers:
-/spacewalk-scripts/ya-errata-import.pl --epel_errata $ERRATADIR/updateinfo.xml --server $SPACEWALK --channel rhel-x86_64-server-6-epel --os-version 6 --publish --redhat --startfromprevious twoweeks --quiet
-# upload the errata to spacewalk, e.g. for a channel used by centos servers:
-/spacewalk-scripts/ya-errata-import.pl --epel_errata $ERRATADIR/updateinfo.xml --server $SPACEWALK --channel centos-x86_64-server-6-epel --os-version 6 --publish --startfromprevious twoweeks --quiet
+errataImport()
+{
+  echo "Errata Import In !!!"
+  echo "Errata Dir: $ERRATADIR"
+	for channel in "${CHANNELS[@]}"
+	do
+	  /spacewalk-scripts/ya-errata-import.pl --epel_errata $ERRATADIR/updateinfo.xml --server $SPACEWALK --channel $channel --os-version $CENTOS_VERSION --publish --startfromprevious twoweeks --quiet
+		# OR do the import and get extra errata info from redhat if possible
+		#/spacewalk-scripts/ya-errata-import.pl --erratadir=$ERRATADIR --server $SPACEWALK --channel $channel --os-version $CENTOS_VERSION --publish --get-from-rhn
+	done
+}
+
+errataImport
 
 rm -f $ERRATADIR/*

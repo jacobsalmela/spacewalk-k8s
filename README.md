@@ -28,7 +28,7 @@ The Dockerfile does most everything, but the last program `supervisord` runs is 
 ```
 git clone <this repo>
 cd <this repo>
-docker build -t spacewalk:0.4 -f Dockerfile-centos .
+docker build -t spacewalk:0.6 -f Dockerfile-centos .
 cd postgres/
 docker build -t spacewalk-postgres:0.2 .
 cd ..
