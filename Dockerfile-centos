@@ -10,6 +10,9 @@ RUN yum -y install \
         spacewalk-postgresql \
         supervisor  \
         osad \
+        wget \
+        perl-Text-Unidecode \
+        perl-Frontier-RPC-Client && \
         yum clean all
 
 #RUN git clone https://github.com/liedekef/spacewalk_scripts.git /spacewalk-scripts
@@ -18,5 +21,8 @@ RUN yum -y install \
 EXPOSE 80 443 5222 68 69
 
 USER root
+
+# Copy scripts needed for syncing errata.  Perhaps better served as a PV, but this works for now
+COPY centos-clone-errata-full.sh centos-clone-errata.sh epel-clone-errata.sh ya-errata-import.pl /spacewalk-scripts/
 
 ENTRYPOINT supervisord -c /etc/supervisord.d/supervisord.conf

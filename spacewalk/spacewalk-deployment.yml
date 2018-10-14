@@ -45,7 +45,7 @@ spec:
         ports:
         - containerPort: 8080
       - name: spacewalk
-        image: spacewalk:0.5
+        image: spacewalk:0.6
         imagePullPolicy: Never
         resources:
           limits:
@@ -64,9 +64,9 @@ spec:
         - configMapRef:
             name: spacewalk-errata-envs
         volumeMounts:
+        - name: spacewalk-answerfile
+          mountPath: /spacewalk-init
         - name: spacewalk-repo-claim
           mountPath: /var/www/html/repo
-        - name: spacewalk-answerfile
-          mountPath: /spacewalk-scripts
         - name: spacewalk-supervisord-conf
           mountPath: /etc/supervisord.d
