@@ -21,9 +21,7 @@ I also wanted to show how it is possible to take a complex program and container
 
 # Caveats
 
-At present, I can get Spacewalk to load up fine in a deployment, but it takes a little manual work to get there.
-
-The Dockerfile does most everything, but the last program `supervisord` runs is a sleep command and then installs Spacewalk and restarts the Web services.  It's janky, but it seems to work at least for development.
+The Dockerfile does most everything, but the last program `supervisord` runs is a sleep command and then installs Spacewalk and restarts the Web services.  It's janky, but it seems to work--at least for development.  It also seems to work fine if you kill the deployment and re-create it--the persistent storage portion is working so you don't lose anything.
 
 # Testing locally
 
@@ -42,13 +40,13 @@ kubectl port-forward <pod> 8000:80 8443:443 8080:8080
 docker container ls
 ```
 
-Now, enter the container and run a few more commands
+(optionally) enter the container and run a few more commands:
 
 ```
 docker exec -it <CONTAINER ID> /bin/bash
 
 # Make sure this program is exited
-supervisorctl status spacewalk
+supervisorctl status spacewalk-init
 exit
 ```
 
@@ -60,7 +58,7 @@ or [https://127.0.0.1:8443/rhn/Login.do](https://127.0.0.1:8443/rhn/Login.do) if
 
 
 # Register a client
-Using a container here again but the steps are the same for a traditional server (per https://github.com/spacewalkproject/spacewalk/wiki/RegisteringClients#red-hat-enterprise-linux-5-6-and-7-scientific-linux-6-and-7-centos-5-6-and-7)
+Using a container here again as an example, but the steps are the same for a traditional server (per https://github.com/spacewalkproject/spacewalk/wiki/RegisteringClients#red-hat-enterprise-linux-5-6-and-7-scientific-linux-6-and-7-centos-5-6-and-7)
 
 ```
 rpm -Uvh https://copr-be.cloud.fedoraproject.org/results/@spacewalkproject/spacewalk-2.8-client/epel-7-x86_64/00742644-spacewalk-repo/spacewalk-client-repo-2.8-11.el7.centos.noarch.rpm
