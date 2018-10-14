@@ -57,6 +57,9 @@ spec:
         - containerPort: 5222
         - containerPort: 68
         - containerPort: 69
+        envFrom:
+        - configMapRef:
+            name: spacewalk-errata-envs
         volumeMounts:
         - name: spacewalk-repo-claim
           mountPath: /var/www/html/repo

@@ -22,3 +22,11 @@ data:
 kind: ConfigMap
 metadata:
   name: spacewalk-answerfile
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spacewalk-errata-envs
+data:
+   SPACEWALK_USER: spaceman
+   SPACEWALK_PASS: spaceman
