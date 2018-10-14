@@ -23,6 +23,6 @@ EXPOSE 80 443 5222 68 69
 USER root
 
 # Copy scripts needed for syncing errata.  Perhaps better served as a PV, but this works for now
-COPY centos-clone-errata-full.sh centos-clone-errata.sh epel-clone-errata.sh ya-errata-import.pl /spacewalk-scripts/
+COPY centos-clone-errata-full.sh centos-clone-errata.sh epel-clone-errata.sh ya-errata-import.pl repo_sync.sh /spacewalk-scripts/
 
 ENTRYPOINT supervisord -c /etc/supervisord.d/supervisord.conf
