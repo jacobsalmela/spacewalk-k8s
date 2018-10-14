@@ -53,7 +53,7 @@ data:
     # This might be stupid but it seems to work.  Let everything start up and then start the install
     # Once done, restart the Web services and the new user creation screen appears
     [program:spacewalk-init]
-    command=/bin/bash -c 'sleep 10 && spacewalk-setup --skip-fqdn-test --skip-db-install --skip-db-population --skip-services-restart --answer-file=/spacewalk-setup/answerfile.txt && supervisorctl restart httpd && supervisorctl restart tomcat'
+    command=/bin/bash -c 'sleep 10 && spacewalk-setup --skip-fqdn-test --skip-db-install --skip-db-population --skip-services-restart --answer-file=/spacewalk-scripts/answerfile.txt && supervisorctl restart httpd && supervisorctl restart tomcat'
     priority=999
 kind: ConfigMap
 metadata:

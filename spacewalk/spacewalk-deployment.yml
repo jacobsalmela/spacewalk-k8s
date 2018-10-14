@@ -67,6 +67,6 @@ spec:
         - name: spacewalk-repo-claim
           mountPath: /var/www/html/repo
         - name: spacewalk-answerfile
-          mountPath: /spacewalk-setup
+          mountPath: /spacewalk-scripts
         - name: spacewalk-supervisord-conf
           mountPath: /etc/supervisord.d
