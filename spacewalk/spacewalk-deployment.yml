@@ -27,6 +27,9 @@ spec:
       - name: spacewalk-answerfile
         configMap:
           name: spacewalk-answerfile
+      - name: spacewalk-supervisord-conf
+        configMap:
+          name: spacewalk-supervisord-conf
       containers:
       - name: postgres
         image: spacewalk-postgres:0.2
@@ -64,4 +67,6 @@ spec:
         - name: spacewalk-repo-claim
           mountPath: /var/www/html/repo
         - name: spacewalk-answerfile
-          mountPath: /tmp
+          mountPath: /spacewalk-setup
+        - name: spacewalk-supervisord-conf
+          mountPath: /etc/supervisord.d
