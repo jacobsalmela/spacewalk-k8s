@@ -24,6 +24,9 @@ spec:
       - name: spacewalk-repo-claim
         persistentVolumeClaim:
           claimName: spacewalk-repo-claim
+      - name: spacewalk-answerfile
+        configMap:
+          name: spacewalk-answerfile
       containers:
       - name: postgres
         image: spacewalk-postgres:0.2
@@ -39,7 +42,7 @@ spec:
         ports:
         - containerPort: 8080
       - name: spacewalk
-        image: spacewalk:0.4
+        image: spacewalk:0.5
         imagePullPolicy: Never
         resources:
           limits:
@@ -57,3 +60,5 @@ spec:
         volumeMounts:
         - name: spacewalk-repo-claim
           mountPath: /var/www/html/repo
+        - name: spacewalk-answerfile
+          mountPath: /tmp

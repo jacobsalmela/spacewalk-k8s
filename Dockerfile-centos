@@ -13,8 +13,6 @@ RUN yum -y install \
         yum clean all
 
 #RUN git clone https://github.com/liedekef/spacewalk_scripts.git /spacewalk-scripts
-# Copy the spacewalk install answer file for an unattended install
-COPY answerfile.txt /tmp/answerfile.txt
 
 # Web interface, Jabber, DHCP/TFTP
 EXPOSE 80 443 5222 68 69
