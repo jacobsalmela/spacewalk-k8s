@@ -19,6 +19,4 @@ EXPOSE 80 443 5222 68 69
 
 USER root
 
-ADD supervisord.conf /etc/supervisord.d/supervisord.conf
-
 ENTRYPOINT supervisord -c /etc/supervisord.d/supervisord.conf
