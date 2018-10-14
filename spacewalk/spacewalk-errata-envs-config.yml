@@ -4,5 +4,13 @@ kind: ConfigMap
 metadata:
   name: spacewalk-errata-envs
 data:
-   SPACEWALK_USER: spaceman
-   SPACEWALK_PASS: spaceman
+  # For use with errata sync scripts
+  CENTOS_VERSION: "7"
+  SPACEWALK_USER: spaceman
+  SPACEWALK_PASS: spaceman
+  #CHANNELS: (centos-7-base centos-7-extras centos-7-updates)
+  # RHN_USER=my_rhn_username
+  # RHN_PASS=my_rhn_password
+  SPACEWALK: 127.0.0.1
+  EPEL_VERSION: "7"
+  EPEL_ARCH: x86_64
