@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spacewalk-db
+  labels:
+    app: spacewalk-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spacewalk-db
+  template:
+    metadata:
+      labels:
+        app: spacewalk-db
+    spec:
+      securityContext:
+        runAsUser: 0
+      volumes:
+      - name: spacewalk-postgres-claim
+        persistentVolumeClaim:
+          claimName: spacewalk-postgres-claim
+      containers:
+      - name: postgres
+        image: spacewalk-postgres:0.2
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: spacewalk-postgres-claim
+          mountPath: /var/lib/postgresql/data
+      - name: adminer
+        image: adminer
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080

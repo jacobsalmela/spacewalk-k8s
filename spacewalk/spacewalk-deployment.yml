@@ -2,25 +2,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spacewalk
+  name: spacewalk-web
   labels:
-    app: spacewalk
+    app: spacewalk-web
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: spacewalk
+      app: spacewalk-web
   template:
     metadata:
       labels:
-        app: spacewalk
+        app: spacewalk-web
     spec:
+      hostname: sw-web-dev
       securityContext:
         runAsUser: 0
       volumes:
-      - name: spacewalk-postgres-claim
-        persistentVolumeClaim:
-          claimName: spacewalk-postgres-claim
       - name: spacewalk-repo-claim
         persistentVolumeClaim:
           claimName: spacewalk-repo-claim
@@ -31,19 +29,6 @@ spec:
         configMap:
           name: spacewalk-supervisord-conf
       containers:
-      - name: postgres
-        image: spacewalk-postgres:0.2
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 5432
-        volumeMounts:
-        - name: spacewalk-postgres-claim
-          mountPath: /var/lib/postgresql/data
-      - name: adminer
-        image: adminer
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
       - name: spacewalk
         image: spacewalk:0.6
         imagePullPolicy: Never

@@ -1,0 +1,18 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: spacewalk-db
+spec:
+  selector:
+    app: spacewalk-db
+  ports:
+  - name: adminer
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  - name: spacewalk-sql
+    protocol: TCP
+    port: 5432
+    targetPort: 5432
+  type: NodePort

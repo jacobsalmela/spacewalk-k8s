@@ -16,7 +16,7 @@ data:
     db-name=postgres
     db-user=spaceuser
     db-password=spacepw
-    db-host=localhost
+    db-host=spacewalk-db
     db-port=5432
     enable-tftp=Y
 kind: ConfigMap

@@ -2,19 +2,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: spacewalk
+  name: spacewalk-web
 spec:
   selector:
-    app: spacewalk
+    app: spacewalk-web
   ports:
-  - name: adminer
-    protocol: TCP
-    port: 8080
-    targetPort: 8080
-  - name: spacewalk-sql
-    protocol: TCP
-    port: 5432
-    targetPort: 5432
   - name: spacewalk-http
     protocol: TCP
     port: 80
