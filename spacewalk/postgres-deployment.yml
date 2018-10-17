@@ -23,13 +23,14 @@ spec:
           claimName: spacewalk-postgres-claim
       containers:
       - name: postgres
-        image: spacewalk-postgres:0.2
-        imagePullPolicy: Never
+        image: jacobsalmela/spacewalk-postgres:0.2
+        imagePullPolicy: Always
         ports:
         - containerPort: 5432
         volumeMounts:
         - name: spacewalk-postgres-claim
           mountPath: /var/lib/postgresql/data
+          subPath: spacewalk
       - name: adminer
         image: adminer
         imagePullPolicy: Always

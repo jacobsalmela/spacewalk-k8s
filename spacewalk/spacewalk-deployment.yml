@@ -30,8 +30,8 @@ spec:
           name: spacewalk-supervisord-conf
       containers:
       - name: spacewalk
-        image: spacewalk:0.6
-        imagePullPolicy: Never
+        image: jacobsalmela/spacewalk:0.6
+        imagePullPolicy: Always
         resources:
           limits:
             memory: 4096Mi
