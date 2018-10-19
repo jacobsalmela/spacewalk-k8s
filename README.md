@@ -60,6 +60,11 @@ or [https://127.0.0.1:8443/rhn/Login.do](https://127.0.0.1:8443/rhn/Login.do) if
 # Register a client
 Using a container here again as an example, but the steps are the same for a traditional server (per https://github.com/spacewalkproject/spacewalk/wiki/RegisteringClients#red-hat-enterprise-linux-5-6-and-7-scientific-linux-6-and-7-centos-5-6-and-7)
 
+First start a container of CentOS:
+```
+docker run -t -d centos
+```
+After adding your spacewalk container into the hosts file of the container:
 ```
 rpm -Uvh https://copr-be.cloud.fedoraproject.org/results/@spacewalkproject/spacewalk-2.8-client/epel-7-x86_64/00742644-spacewalk-repo/spacewalk-client-repo-2.8-11.el7.centos.noarch.rpm
 rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
