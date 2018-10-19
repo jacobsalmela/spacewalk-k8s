@@ -22,21 +22,39 @@ spec:
       - name: spacewalk-repo-claim
         persistentVolumeClaim:
           claimName: spacewalk-repo-claim
+      - name: spacewalk-html-pub-claim
+        persistentVolumeClaim:
+          claimName: spacewalk-html-pub-claim
+      # - name: spacewalk-httpd-conf-d-claim
+      #   persistentVolumeClaim:
+      #     claimName: spacewalk-httpd-conf-d-claim
+      - name: spacewalk-ssl-build-claim
+        persistentVolumeClaim:
+          claimName: spacewalk-ssl-build-claim
+      - name: spacewalk-jabberd-claim
+        persistentVolumeClaim:
+          claimName: spacewalk-jabberd-claim
       - name: spacewalk-answerfile
         configMap:
           name: spacewalk-answerfile
       - name: spacewalk-supervisord-conf
         configMap:
           name: spacewalk-supervisord-conf
+      - name: spacewalk-httpd-conf
+        configMap:
+          name: spacewalk-httpd-conf
+      - name: spacewalk-httpd-magic
+        configMap:
+          name: spacewalk-httpd-magic
       containers:
       - name: spacewalk
-        image: jacobsalmela/spacewalk:0.6
-        imagePullPolicy: Always
-        resources:
-          limits:
-            memory: 4096Mi
-          requests:
-            memory: 4096Mi
+        image: spacewalk:0.6
+        imagePullPolicy: Never
+        # resources:
+        #   limits:
+        #     memory: 4096Mi
+        #   requests:
+        #     memory: 4096Mi
         ports:
         - containerPort: 80
           hostPort: 8000
@@ -51,7 +69,19 @@ spec:
         volumeMounts:
         - name: spacewalk-answerfile
           mountPath: /spacewalk-init
+        - name: spacewalk-httpd-conf
+          mountPath: /httpd-conf
+        - name: spacewalk-httpd-magic
+          mountPath: /httpd-magic
         - name: spacewalk-repo-claim
           mountPath: /var/www/html/repo
         - name: spacewalk-supervisord-conf
           mountPath: /etc/supervisord.d
+        - name: spacewalk-html-pub-claim
+          mountPath: /var/www/html/pub
+        # - name: spacewalk-httpd-conf-d-claim
+        #   mountPath: /etc/httpd/conf.d
+        - name: spacewalk-ssl-build-claim
+          mountPath: /root/ssl-build
+        - name: spacewalk-jabberd-claim
+          mountPath: /etc/pki/spacewalk/jabberd
