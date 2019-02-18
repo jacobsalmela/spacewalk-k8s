@@ -37,6 +37,12 @@ data:
     [program:tomcat]
     command=/usr/libexec/tomcat/server start
 
+    [program:httpd-conf-init]
+    command=/bin/bash -c 'ln -s /httpd-conf/httpd.conf /etc/httpd/conf/httpd.conf'
+
+    [program:httpd-magic-init]
+    command=/bin/bash -c 'ln -s /httpd-magic/magic /etc/httpd/conf/magic'
+
     [program:httpd]
     command=/usr/sbin/httpd -D FOREGROUND
 
@@ -53,17 +59,21 @@ data:
 
     # This might be stupid but it seems to work
     # The very first time you deploy this Spacewalk via Kubernetes, deploy it with this service
-    # After that is done, spacewalk should be up and working
-    # Now that you have persistent storage and other confimaps in place,
-    # Modify your deployment to run this command instead.
+    # After that is done, spacewalk should be up and working,
+    # At which point you can comment this out in your deployment
+    # You'll want to take the CSR and sign it with your CA
+    # Then convert those into configmaps/secrets for use with your deployment
+    # I spent many days trying to get this to work with the self-signed ones and just couldn't get it
     #
-    # command=/bin/bash -c 'sleep 20 && spacewalk-setup --skip-fqdn-test --skip-db-install --skip-db-population --skip-services-restart --skip-ssl-cert-generation --skip-ssl-ca-generation --skip-ssl-vhost-setup --answer-file=/spacewalk-init/answerfile.txt && supervisorctl restart httpd && supervisorctl restart tomcat'
+    # After your first deployment and you have Spacewalk working, you'll want to modify your deployment to use this command instead
+    # Which will retain the certificates
     #
-    # It basically runs through the installer and skips almost everything
+    #     sleep 10 && spacewalk-setup --skip-fqdn-test --skip-db-install --skip-db-population --skip-services-restart --answer-file=/spacewalk-init/answerfile.txt && supervisorctl restart httpd && supervisorctl restart tomcat
+    #     spacewalk-setup --skip-ssl-ca-generation --skip-ssl-cert-generation --skip-fqdn-test --skip-db-install --skip-db-population --skip-services-restart --answer-file=/spacewalk-init/answerfile.txt && supervisorctl restart httpd && supervisorctl restart tomcat
     #
-    #
+
     [program:spacewalk-init]
-    command=/bin/bash -c 'sleep 20 && spacewalk-setup --skip-fqdn-test --skip-db-install --skip-db-population --skip-services-restart --answer-file=/spacewalk-init/answerfile.txt && supervisorctl restart httpd && supervisorctl restart tomcat'
+    command=/bin/bash -c 'sleep 10 && spacewalk-setup --skip-fqdn-test --skip-db-install --skip-db-population --skip-services-restart --answer-file=/spacewalk-init/answerfile.txt && supervisorctl restart httpd && supervisorctl restart tomcat'
     priority=999
 metadata:
   name: spacewalk-supervisord-conf
