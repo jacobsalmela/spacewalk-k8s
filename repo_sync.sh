@@ -1,11 +1,11 @@
 #!/bin/bash
 repo_ids=(epel base extras updates)
 
-REPO_DIRECTORY=/var/www/html/repo/
+REPO_DIRECTORY=/var/www/html/repo
 
 reposync_a_repo(){
 	if [[ "$repo" == "extras" ]] || [[ "$repo" == "updates" ]]; then
-		rsync -azHP --exclude='drpms/' --ignore-existing "$mirror" $REPO_DIRECTORY/"$repo"
+		rsync -azHP --exclude='drpms/' --ignore-existing "$mirror" "$REPO_DIRECTORY/$repo"
 	elif [[ "$repo" == "base" ]]; then
 		rsync -azHP --ignore-existing\
 			--exclude='CentOS_BuildTag' \
