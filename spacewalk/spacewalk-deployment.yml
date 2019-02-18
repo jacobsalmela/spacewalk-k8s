@@ -15,7 +15,6 @@ spec:
       labels:
         app: spacewalk-web
     spec:
-      hostname: sw-web-dev
       securityContext:
         runAsUser: 0
       volumes:
@@ -25,9 +24,9 @@ spec:
       - name: spacewalk-html-pub-claim
         persistentVolumeClaim:
           claimName: spacewalk-html-pub-claim
-      # - name: spacewalk-httpd-conf-d-claim
-      #   persistentVolumeClaim:
-      #     claimName: spacewalk-httpd-conf-d-claim
+      - name: spacewalk-httpd-conf-claim
+        persistentVolumeClaim:
+          claimName: spacewalk-httpd-conf-claim
       - name: spacewalk-ssl-build-claim
         persistentVolumeClaim:
           claimName: spacewalk-ssl-build-claim
@@ -48,18 +47,18 @@ spec:
           name: spacewalk-httpd-magic
       containers:
       - name: spacewalk
-        image: spacewalk:0.6
-        imagePullPolicy: Never
-        # resources:
-        #   limits:
-        #     memory: 4096Mi
-        #   requests:
-        #     memory: 4096Mi
+        image: jacobsalmela/spacewalk:2.8
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 4096Mi
+            cpu: "1"
+          requests:
+            memory: 4096Mi
+            cpu: "1"
         ports:
         - containerPort: 80
-          hostPort: 8000
         - containerPort: 443
-          hostPort: 8443
         - containerPort: 5222
         - containerPort: 68
         - containerPort: 69
@@ -79,8 +78,8 @@ spec:
           mountPath: /etc/supervisord.d
         - name: spacewalk-html-pub-claim
           mountPath: /var/www/html/pub
-        # - name: spacewalk-httpd-conf-d-claim
-        #   mountPath: /etc/httpd/conf.d
+        - name: spacewalk-httpd-conf-claim
+          mountPath: /etc/httpd/conf
         - name: spacewalk-ssl-build-claim
           mountPath: /root/ssl-build
         - name: spacewalk-jabberd-claim
