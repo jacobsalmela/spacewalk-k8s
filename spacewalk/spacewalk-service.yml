@@ -3,6 +3,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: spacewalk-web
+  # annotations:
+  #   service.alpha.kubernetes.io/app-protocols: '{"spacewalk-https":"HTTPS"}'
 spec:
   selector:
     app: spacewalk-web
