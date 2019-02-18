@@ -7,7 +7,7 @@ data:
   # For use with errata sync scripts
   CENTOS_VERSION: "7"
   SPACEWALK_USER: spaceman
-  SPACEWALK_PASS: spaceman
+  SPACEWALK_PASS: spacepw
   #CHANNELS: (centos-7-base centos-7-extras centos-7-updates)
   # RHN_USER=my_rhn_username
   # RHN_PASS=my_rhn_password
