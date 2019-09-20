@@ -3,6 +3,16 @@ Spacewalk--containerized and running on Kubernetes
 
 https://jacobsalmela.com/2019/02/18/spacewalk-containerized-and-running-in-kubernetes/
 
+## Pull prebuilt images from Github or Docker
+```
+# Github
+docker pull docker.pkg.github.com/jacobsalmela/spacewalk-k8s/spacewalk:2.9
+docker pull docker.pkg.github.com/jacobsalmela/spacewalk-k8s/spacewalk-postgres:2.9
+# Docker
+docker pull jacobsalmela/spacewalk:2.9
+docker pull jacobsalmela/spacewalk-postgres:2.9
+
+```
 ## Spacewalk as a Kubernetes deployment, why?
 
 This repo is an attempt to containerize Spacewalk and run it as a Kubernetes deployment.
