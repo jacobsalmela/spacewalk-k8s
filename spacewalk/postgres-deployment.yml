@@ -23,7 +23,7 @@ spec:
           claimName: spacewalk-postgres-claim
       containers:
       - name: postgres
-        image: jacobsalmela/spacewalk-postgres:2.9
+        image: jacobsalmela/spacewalk-postgres:2.10
         imagePullPolicy: Always
         ports:
         - containerPort: 5432

@@ -47,7 +47,7 @@ spec:
           name: spacewalk-httpd-magic
       containers:
       - name: spacewalk
-        image: jacobsalmela/spacewalk:2.9
+        image: jacobsalmela/spacewalk:2.10
         imagePullPolicy: Always
         resources:
           limits:

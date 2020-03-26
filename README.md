@@ -6,11 +6,11 @@ https://jacobsalmela.com/2019/02/18/spacewalk-containerized-and-running-in-kuber
 ## Pull prebuilt images from Github or Docker
 ```
 # Github
-docker pull docker.pkg.github.com/jacobsalmela/spacewalk-k8s/spacewalk:2.9
-docker pull docker.pkg.github.com/jacobsalmela/spacewalk-k8s/spacewalk-postgres:2.9
+docker pull docker.pkg.github.com/jacobsalmela/spacewalk-k8s/spacewalk:2.10
+docker pull docker.pkg.github.com/jacobsalmela/spacewalk-k8s/spacewalk-postgres:2.10
 # Docker
-docker pull jacobsalmela/spacewalk:2.9
-docker pull jacobsalmela/spacewalk-postgres:2.9
+docker pull jacobsalmela/spacewalk:2.10
+docker pull jacobsalmela/spacewalk-postgres:2.10
 
 ```
 ## Spacewalk as a Kubernetes deployment, why?
@@ -40,9 +40,9 @@ The Dockerfile does most everything, but the last program `supervisord` runs is 
 ```
 git clone <this repo>
 cd <this repo>
-docker build -t spacewalk:2.9 -f Dockerfile-centos .
+docker build -t spacewalk:2.10 -f Dockerfile-centos .
 cd postgres/
-docker build -t spacewalk-postgres:2.9 .
+docker build -t spacewalk-postgres:2.10 .
 cd ..
 kubectl create -f spacewalk-pv/
 kubectl create -f spacewalk/
@@ -74,7 +74,7 @@ or [https://127.0.0.1:8443/rhn/Login.do](https://127.0.0.1:8443/rhn/Login.do) if
 I tested with a container here as an example, but the steps are the same for a traditional server or VM (per https://github.com/spacewalkproject/spacewalk/wiki/RegisteringClients#red-hat-enterprise-linux-5-6-and-7-scientific-linux-6-and-7-centos-5-6-and-7)
 
 ```
-rpm -Uvh https://copr-be.cloud.fedoraproject.org/results/%40spacewalkproject/spacewalk-2.9-client/epel-7-x86_64/00830558-spacewalk-repo/spacewalk-client-repo-2.9-4.el7.noarch.rpm
+rpm -Uvh https://copr-be.cloud.fedoraproject.org/results/%40spacewalkproject/spacewalk-2.10/epel-7-x86_64/01259466-spacewalk-repo/spacewalk-client-repo-2.10-8.el7.noarch.rpm
 rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 yum -y install rhn-client-tools rhn-check rhn-setup rhnsd m2crypto yum-rhn-plugin
 rpm -Uvh http://<SPACEWALK WEB CONTAINER>/pub/rhn-org-trusted-ssl-cert-1.0-1.noarch.rpm

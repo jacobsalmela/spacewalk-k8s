@@ -1,4 +1,4 @@
--- main.sql from a clean 2.9 install found at /etc/sysconfig/rhn/postgres/main.sql
+-- main.sql from a clean 2.10 install found at /etc/sysconfig/rhn/postgres/main.sql
 -- Spacewalk needs this additional language installed
 CREATE LANGUAGE pltclu;
 CREATE USER spaceuser SUPERUSER;
@@ -2230,7 +2230,8 @@ CREATE TABLE rhnPackage
     header_start     NUMERIC
                          DEFAULT (-1) NOT NULL,
     header_end       NUMERIC
-                         DEFAULT (-1) NOT NULL
+                         DEFAULT (-1) NOT NULL,
+    multi_arch       VARCHAR(16)
 )
 
 ;
@@ -3029,7 +3030,8 @@ CREATE UNIQUE INDEX rhn_cs_label_uq
     ON rhnContentSource(org_id, label)
     ;
 CREATE UNIQUE INDEX rhn_cs_repo_uq
-    ON rhnContentSource(org_id, type_id, source_url)
+    ON rhnContentSource(org_id, type_id, source_url,
+                        (case when label like 'manifest_%' then 1 else 0 end))
     ;
 
 
@@ -9154,7 +9156,7 @@ CREATE TABLE rhnXccdfIdent
     identsystem_id  NUMERIC NOT NULL
                         CONSTRAINT rhn_xccdf_ident_system_fk
                             REFERENCES rhnXccdfIdentsystem (id),
-    identifier      VARCHAR (100) NOT NULL
+    identifier      VARCHAR (255) NOT NULL
 )
 
 ;
@@ -15477,22 +15479,67 @@ $$ language 'plpgsql';
         two := str2;
 
         <<segment_loop>>
-        while one <> '' and two <> ''
+        while one <> '' or two <> ''
         loop
             declare
                 segm1 VARCHAR;
                 segm2 VARCHAR;
+                onechar CHAR(1);
+                twochar CHAR(1);
             begin
-                --DBMS_OUTPUT.PUT_LINE('Params: ' || one || ',' || two);
+                --raise notice 'Params: %, %',  one, two;
                 -- Throw out all non-alphanum characters
-                while one <> '' and not rpm.isalphanum(one)
+                onechar := substr(one, 1, 1);
+                twochar := substr(two, 1, 1);
+                while one <> '' and not rpm.isalphanum(one) and onechar != '~' and onechar != '^'
                 loop
                     one := substr(one, 2);
                 end loop;
-                while two <> '' and not rpm.isalphanum(two)
+                while two <> '' and not rpm.isalphanum(two) and twochar != '~' and twochar != '^'
                 loop
                     two := substr(two, 2);
                 end loop;
+                --raise notice 'new params: %, %', one, two;
+
+                onechar := substr(one, 1, 1);
+                twochar := substr(two, 1, 1);
+                --raise notice 'new chars 1: %, %', onechar, twochar;
+                /* handle the tilde separator, it sorts before everything else */
+                if (onechar = '~' or twochar = '~')
+                then
+                    if (onechar != '~') then return 1; end if;
+                    if (twochar != '~') then return -1; end if;
+                    --raise notice 'passed tilde chars: %, %', onechar, twochar;
+                    one := substr(one, 2);
+                    two := substr(two, 2);
+                    continue;
+                end if;
+
+                /*
+                 * Handle caret separator. Concept is the same as tilde,
+                 * except that if one of the strings ends (base version),
+                 * the other is considered as higher version.
+                 */
+                onechar := substr(one, 1, 1);
+                twochar := substr(two, 1, 1);
+                --raise notice 'new chars 2: %, %', onechar, twochar;
+                if (onechar = '^' or twochar = '^')
+                then
+                    if (one = '') then return -1; end if;
+                    --raise notice 'passed caret chars 1: %, %', onechar, twochar;
+                    if (two = '') then return 1; end if;
+                    --raise notice 'passed caret chars 2: %, %', onechar, twochar;
+                    if (onechar != '^') then return 1; end if;
+                    --raise notice 'passed caret chars 3: %, %', onechar, twochar;
+                    if (twochar != '^') then return -1; end if;
+                    --raise notice 'passed caret chars 4: %, %', onechar, twochar;
+                    one := substr(one, 2);
+                    two := substr(two, 2);
+                    continue;
+                end if;
+
+                if (not (one <> '' and two <> '')) then exit segment_loop; end if;
+
                 str1 := one;
                 str2 := two;
                 if str1 <> '' and rpm.isdigit(str1)
@@ -40748,6 +40795,10 @@ insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
 (sequence_nextval('rhn_pkey_id_seq'), '9DB62FB1', lookup_package_key_type('gpg'), lookup_package_provider('Fedora'));
 insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
 (sequence_nextval('rhn_pkey_id_seq'), '429476B4', lookup_package_key_type('gpg'), lookup_package_provider('Fedora'));
+insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
+(sequence_nextval('rhn_pkey_id_seq'), 'CFC659B9', lookup_package_key_type('gpg'), lookup_package_provider('Fedora'));
+insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
+(sequence_nextval('rhn_pkey_id_seq'), '3C3359C4', lookup_package_key_type('gpg'), lookup_package_provider('Fedora'));
 
 insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
 (sequence_nextval('rhn_pkey_id_seq'), 'a8a447dce8562897', lookup_package_key_type('gpg'), lookup_package_provider('CentOS'));
@@ -40764,6 +40815,8 @@ insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
 (sequence_nextval('rhn_pkey_id_seq'), '0946fca2c105b9de', lookup_package_key_type('gpg'), lookup_package_provider('CentOS'));
 insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
 (sequence_nextval('rhn_pkey_id_seq'), '24c6a8a7f4a80eb5', lookup_package_key_type('gpg'), lookup_package_provider('CentOS'));
+insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
+(sequence_nextval('rhn_pkey_id_seq'), '05b555b38483c65d', lookup_package_key_type('gpg'), lookup_package_provider('CentOS'));
 
 
 insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
@@ -40819,6 +40872,14 @@ insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
 (sequence_nextval('rhn_pkey_id_seq'), '41605346066e5810', lookup_package_key_type('gpg'), lookup_package_provider('Spacewalk'));
 insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
 (sequence_nextval('rhn_pkey_id_seq'), 'dcc981cdb8002de1', lookup_package_key_type('gpg'), lookup_package_provider('Spacewalk'));
+insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
+(sequence_nextval('rhn_pkey_id_seq'), '3ae9b50430912c76', lookup_package_key_type('gpg'), lookup_package_provider('Spacewalk'));
+insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
+(sequence_nextval('rhn_pkey_id_seq'), '770ce53ebc2e6843', lookup_package_key_type('gpg'), lookup_package_provider('Spacewalk'));
+insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
+(sequence_nextval('rhn_pkey_id_seq'), 'e481344adba67ea3', lookup_package_key_type('gpg'), lookup_package_provider('Spacewalk'));
+insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
+(sequence_nextval('rhn_pkey_id_seq'), 'd4b984391b9881e5', lookup_package_key_type('gpg'), lookup_package_provider('Spacewalk'));
 
 
 insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
@@ -40827,6 +40888,8 @@ insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
 (sequence_nextval('rhn_pkey_id_seq'), '3b49df2a0608b895', lookup_package_key_type('gpg'), lookup_package_provider('EPEL'));
 insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
 (sequence_nextval('rhn_pkey_id_seq'), '6a2faea2352c64e5', lookup_package_key_type('gpg'), lookup_package_provider('EPEL'));
+insert into rhnPackageKey (id, key_id, key_type_id, provider_id) values
+(sequence_nextval('rhn_pkey_id_seq'), '21ea45ab2f86d6a1', lookup_package_key_type('gpg'), lookup_package_provider('EPEL'));
 
 
 commit;
@@ -42816,7 +42879,7 @@ INSERT INTO rhnVersionInfo
 )
 ( SELECT 'schema',
          lookup_package_name('spacewalk-schema'),
-         lookup_evr(NULL, '2.9.11' , '1.el7' )
+         lookup_evr(NULL, '2.10.11' , '1.el7' )
   FROM dual
 );
 commit;

@@ -2,7 +2,7 @@ FROM centos:7
 
 MAINTAINER Jacob Salmela <jacob.salmela@pi-hole.net>
 
-RUN yum install -y https://copr-be.cloud.fedoraproject.org/results/@spacewalkproject/spacewalk-2.9/epel-7-x86_64/00830557-spacewalk-repo/spacewalk-repo-2.9-4.el7.noarch.rpm \
+RUN yum install -y https://copr-be.cloud.fedoraproject.org/results/%40spacewalkproject/spacewalk-2.10/epel-7-x86_64/01259466-spacewalk-repo/spacewalk-repo-2.10-8.el7.noarch.rpm \
         https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
         yum clean all
 
